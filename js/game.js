@@ -18,7 +18,7 @@
     } else return alert(`Бот выиграл и забирает шарики.`);
   }
 
-  function win(winGame, playerBalls, botBalls) {
+  function win(winGame) {
     if (winGame === 'player') {
       return alert(`Вы выиграли! У бота закончились шарики.`);
     } else {
@@ -106,10 +106,10 @@
         // Игра закончилась
         if (balls.playerBalls <= 0) {
           const winGame = 'bot';
-          win(winGame, balls.playerBalls, balls.botBalls);
+          win(winGame);
         } else {
           const winGame = 'player';
-          win(winGame, balls.playerBalls, balls.botBalls);
+          win(winGame);
         }
       }
     };
