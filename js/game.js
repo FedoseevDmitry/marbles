@@ -12,20 +12,18 @@
     } return 1;
   }
 
-  function showPlayerWin() {
-    alert(`Вы выиграли и забираете шарики.`);
+  function showWin(winRound) {
+    if (winRound === 'player') {
+      return alert(`Вы выиграли и забираете шарики.`);
+    } else return alert(`Бот выиграл и забирает шарики.`);
   }
 
-  function showBotWin() {
-    alert(`Бот выиграл и забирает шарики.`);
-  }
-
-  function playerWin() {
-    alert(`Вы выиграли!`);
-  }
-
-  function botWin() {
-    alert(`Бот выиграл!`);
+  function win(winGame, playerBalls, botBalls) {
+    if (winGame === 'player') {
+      return alert(`Вы выиграли! У бота закончились шарики.`);
+    } else {
+      return alert(`Бот выиграл! У вас закончились шарики.`);
+    }
   }
 
   // Получение ввода пользователя
@@ -55,56 +53,47 @@
   };
 
   // Запуск игры
-  const runGame = (firstStep) => {
-    // Стартовое количество
+  const runGame = () => {
+    // Стартовое значения
+    let bid = null;
+    let odd = null;
+    let guess = null;
+
     const balls = {
       playerBalls: 5,
       botBalls: 5,
     };
-    const bid = {
-      2: 'четное',
-      1: 'нечетное',
-    };
-    // Ссновной функционал
+    // Основной функционал
     return function startGame(firstStep) {
+      bid = firstStep === 'игрок' ? getPlayerBid(balls.playerBalls) :
+        Math.floor(Math.random() * (balls.botBalls)) + 1;
+      console.log(`Ставка: ${bid}`);
+      odd = checkOdd(bid);
+      console.log(`Значение четности: ${odd} 2 - ч, 1 - н`);
+      guess = firstStep === 'игрок' ? getBotGuess() : getPlayerStep();
+      console.log(`Четное или нет: ${guess} 2 - ч, 1 - н`);
+      console.log(`Ставка: ${bid}\n Четная ставка? ${odd}\n
+      Отгадывание: ${guess}`);
+      // Проверка победы бота или игрока
+      if ((odd !== guess && firstStep === 'игрок') || (odd === guess &&
+        firstStep === 'бот')) {
+        // Победа игрока
+        const winRound = 'player';
+        showWin(winRound);
+        balls.playerBalls += bid;
+        balls.botBalls -= bid;
+      } else {
+        // Победа бота
+        const winRound = 'bot';
+        showWin(winRound);
+        balls.playerBalls -= bid;
+        balls.botBalls += bid;
+      }
+
+      // Передача хода
       if (firstStep === 'игрок') {
-        const playerBid = getPlayerBid(balls.playerBalls);
-        console.log(playerBid);
-        const odd = checkOdd(playerBid);
-        console.log(`Ставка ${playerBid}, ${odd}`);
-        const botGuess = getBotGuess();
-        console.log('Бот говорит: ', bid[botGuess]);
-        // Проверка победы бота или игрока
-        if (botGuess === checkOdd) {
-          // Победа бота
-          showBotWin();
-          balls.playerBalls -= playerBid;
-          balls.botBalls += playerBid;
-        } else {
-          // Победа игрока
-          showPlayerWin();
-          balls.playerBalls += playerBid;
-          balls.botBalls -= playerBid;
-        }
-        // ход бота
         firstStep = 'бот';
-      } else if (firstStep === 'бот') {
-        const botBid = Math.floor(Math.random() * (balls.botBalls)) + 1;
-        const odd = checkOdd(botBid);
-        console.log(`Ставка ${botBid}, ${odd}`);
-        const playerStep = getPlayerStep();
-        console.log('Игрок говорит: ', bid[playerStep]);
-        if (playerStep === odd) {
-          // Победа игрока
-          showPlayerWin();
-          balls.playerBalls += botBid;
-          balls.botBalls -= botBid;
-        } else {
-          // Победа бота
-          showBotWin();
-          balls.playerBalls -= botBid;
-          balls.botBalls += botBid;
-        }
+      } else {
         firstStep = 'игрок';
       }
 
@@ -116,11 +105,11 @@
       } else {
         // Игра закончилась
         if (balls.playerBalls <= 0) {
-          botWin();
+          const winGame = 'bot';
+          win(winGame, balls.playerBalls, balls.botBalls);
         } else {
-          playerWin();
-          alert(`У вас: ${balls.playerBalls} шариков, ` +
-          `у бота ${balls.botBalls} шариков.`);
+          const winGame = 'player';
+          win(winGame, balls.playerBalls, balls.botBalls);
         }
       }
     };
