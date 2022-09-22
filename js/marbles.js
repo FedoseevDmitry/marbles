@@ -14,22 +14,22 @@
 
   function showWin(winRound) {
     if (winRound === 'player') {
-      return alert(`Вы выиграли и забираете шарики.`);
+      return alert(`Ты выиграл и забираешь шарики.`);
     } else return alert(`Бот выиграл и забирает шарики.`);
   }
 
   function win(winGame) {
     if (winGame === 'player') {
-      return alert(`Вы выиграли! У бота закончились шарики.`);
+      return alert(`Ты выиграл! У бота закончились шарики.`);
     } else {
-      return alert(`Бот выиграл! У вас закончились шарики.`);
+      return alert(`Бот выиграл! У тебя закончились шарики.`);
     }
   }
 
   // Получение ввода пользователя
   const getPlayerBid = ballsCount => {
     const playerBid = parseInt(prompt(`У тебя ${ballsCount} шариков. ` +
-    `Сколько ставка?`));
+    `Сколько шариков ставишь?`));
 
     // Проверки ввода
     if (playerBid < 1 || playerBid > ballsCount) {
@@ -43,7 +43,8 @@
   };
 
   const getPlayerStep = () => {
-    const playerStep = prompt('Цифра четная?').toLowerCase();
+    const playerStep = prompt(`Бот загадал цифру. Она четная? ` +
+    `Напишите "да" или "нет"`).toLowerCase();
     if (playerStep === 'да' || playerStep === 'нет') {
       return playerStep === 'да' ? 2 : 1;
     } else {
